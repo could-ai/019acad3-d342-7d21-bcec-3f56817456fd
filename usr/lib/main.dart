@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/agent_chat_screen.dart';
+import 'screens/chat_history_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const MyHomePage(title: 'CouldAI Home'),
         '/agent': (context) => const AgentChatScreen(),
+        '/history': (context) => const ChatHistoryScreen(),
       },
     );
   }
@@ -68,8 +70,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pushNamed(context, '/agent');
               },
               icon: const Icon(Icons.chat),
-              label: const Text('启动智能助手'),
+              label: const Text('启动新对话'),
               style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
+            ),
+            const SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.pushNamed(context, '/history');
+              },
+              icon: const Icon(Icons.history),
+              label: const Text('查看历史会话'),
+              style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 textStyle: const TextStyle(fontSize: 18),
               ),

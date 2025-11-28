@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import '../models/message.dart';
 
 class AgentChatScreen extends StatefulWidget {
-  const AgentChatScreen({super.key});
+  final List<ChatMessage>? initialMessages;
+  final String? chatTitle;
+
+  const AgentChatScreen({
+    super.key,
+    this.initialMessages,
+    this.chatTitle,
+  });
 
   @override
   State<AgentChatScreen> createState() => _AgentChatScreenState();
@@ -17,14 +24,26 @@ class _AgentChatScreenState extends State<AgentChatScreen> {
   @override
   void initState() {
     super.initState();
-    // Add initial greeting
-    _messages.add(
-      ChatMessage(
-        text: "你好！我是你的智能助手 Agent。有什么我可以帮你的吗？",
-        isUser: false,
-        timestamp: DateTime.now(),
-      ),
-    );
+    
+    if (widget.initialMessages != null && widget.initialMessages!.isNotEmpty) {
+      _messages.addAll(widget.initialMessages!);
+    } else {
+      // Add initial greeting only if no history is provided
+      _messages.add(
+        ChatMessage(
+          text: "你好！我是你的智能助手 Agent。有什么我可以帮你的吗？",
+          isUser: false,
+          timestamp: DateTime.now(),
+        ),
+      );
+    }
+    
+    // Scroll to bottom after initial build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+    });
   }
 
   void _handleSubmitted(String text) {
@@ -120,7 +139,7 @@ class _AgentChatScreenState extends State<AgentChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('智能助手 Agent'),
+        title: Text(widget.chatTitle ?? '智能助手 Agent'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Column(
